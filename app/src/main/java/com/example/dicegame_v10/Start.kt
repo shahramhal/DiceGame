@@ -4,11 +4,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -96,12 +99,26 @@ fun GUI() {
         // Human Dice
         Text("Your dice", fontSize = 18.sp)
         Row {
-            humanDice.forEach { value ->
-                Image(
-                    painterResource(id = diceImages[value - 1]),
-                    contentDescription = "Dice $value",
-                    modifier = Modifier.size(64.dp)
-                )
+            humanDice.forEachIndexed {index, value ->
+                val isSelected= selectedDice[index]
+                Box( modifier = Modifier.clickable {
+                    selectedDice=selectedDice.toMutableList().also {
+                        it[index]=!it[index] // toggle selection
+                    }
+
+                }
+                    .border(2.dp, if (isSelected) Color.Green else Color.Transparent)
+                    .padding(4.dp)
+
+                ){
+                    Image(
+                        painterResource(id = diceImages[value - 1]),
+                        contentDescription = "Dice $value",
+                        modifier = Modifier.size(64.dp)
+                    )
+
+                }
+
             }
         }
         Spacer(modifier = Modifier.height(20.dp))
