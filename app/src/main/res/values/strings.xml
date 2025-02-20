@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">DiceGame_V1.0</string>
+    <string name="title_activity_start">Start</string>
+</resources>
