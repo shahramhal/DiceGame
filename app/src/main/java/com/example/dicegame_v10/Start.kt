@@ -37,9 +37,11 @@ fun GUI() {
     var compDice by remember { mutableStateOf(List(5) { 1 }) }
     var rerolleft by remember { mutableStateOf(2) }
     var winnerMessage by remember { mutableStateOf("") }
-    var countScore by remember { mutableStateOf(false) }
+    var canScore by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
     var selectedDice by remember { mutableStateOf(List(5) { false }) }
+    var computerRerollsLeft by remember { mutableStateOf(2) } // Track computer's rerolls
+
 
 
     val diceImages = listOf(
@@ -51,10 +53,19 @@ fun GUI() {
         return List(5) { Random.nextInt(1, 7) }
     }
 
+    fun computerReroll(dice: List<Int>): List<Int> {
+        val keepDice = List(5) { Random.nextBoolean() } // Randomly decide which dice to keep
+        return dice.mapIndexed { index, value ->
+            if (keepDice[index]) value // Keep the dice
+            else Random.nextInt(1, 7) // Reroll the dice
+        }
+    }
     fun Score() {
+
         humanScore += humanDice.sum()
         compScore += compDice.sum()
         rerolleft = 2
+        selectedDice = List(5){false}
     }
 
     fun checkWinner() {
@@ -70,13 +81,12 @@ fun GUI() {
         compDice = List(5) { 1 }
         rerolleft = 2
         winnerMessage = ""
-        countScore = false
+        canScore = false
         errorMessage = ""
+        computerRerollsLeft = 2
 
     }
-    fun diceToKeep(){
 
-    }
 
 
     Column(
@@ -107,6 +117,7 @@ fun GUI() {
                     }
 
                 }
+                    // Highlight selected dice
                     .border(2.dp, if (isSelected) Color.Green else Color.Transparent)
                     .padding(4.dp)
 
@@ -138,15 +149,25 @@ fun GUI() {
             // Throw Button
             Button(
                 onClick = {
+                    //modify human dice to keep clicked dice
                     if (rerolleft >= 0) {
-                        humanDice = Diceroll()
+                        humanDice = humanDice.mapIndexed { index, value ->
+                            if (selectedDice[index]) value
+                            else Random.nextInt(1, 7)
+                        }
+                        // Comp first turn
                         compDice = Diceroll()
-                        countScore = true
+                        canScore = true
                         rerolleft--
+                        // computer wait until player finish his turn
                         if (rerolleft < 0) {
+//                            while (computerRerollsLeft>=0){
+//                                compDice=computerReroll(compDice)
+//                                computerRerollsLeft--
+//                            }
                             Score()
                             checkWinner()
-                            countScore=false
+                            canScore=false
 
                         }
                     }
@@ -158,10 +179,15 @@ fun GUI() {
             // Score Button
             Button(
                 onClick = {
-                    if (countScore) {
+                    if (canScore) {
+                        // Computer uses its remaining rerolls
+                        while (computerRerollsLeft >= 0) {
+                            compDice = computerReroll(compDice)
+                            computerRerollsLeft--
+                        }
                         Score()
                         checkWinner()
-                        countScore = false
+                        canScore = false
                     } else {
                         errorMessage = "Please throw the dice"
                     }
