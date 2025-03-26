@@ -35,7 +35,7 @@ A Kotlin-based Android dice game application built with Jetpack Compose, impleme
   - `Start.kt`: Main game logic and UI
   - Custom theme system (Light/Dark mode support)
 
-- **Computer Strategy** (Task 12):
+- **Computer Strategy** :
   The AI considers:
   - Current dice values
   - Score difference between players
