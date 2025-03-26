@@ -19,12 +19,13 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            DiceGame_V10Theme{
+                HomeScreen()
 
-                    HomeScreen()
-                }
-
+            }
         }
     }
+}
 
 
 @Composable
@@ -40,7 +41,7 @@ fun HomeScreen() {
         val context = LocalContext.current
         Text(
             text = "Welcome to Dice Game",
-            fontSize = 36.sp,
+            fontSize = 30.sp,
             modifier = Modifier.padding(8.dp)
         )
         // 1.Create New Game button
@@ -71,8 +72,8 @@ fun HomeScreen() {
                 text = {
                     Text(
                         text = """
-                            Name: [Shahram Halimzoda]
-                            Student ID: [w2064610]
+                            Name: Shahram Halimzoda
+                            Student ID: w2064610
                             
                             I confirm that I understand what plagiarism is and have read and
                             understood the section on Assessment Offences in the Essential
